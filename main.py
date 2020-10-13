@@ -60,3 +60,31 @@ validation_generator = test_datagen.flow_from_directory(
   batch_size=4,
   class_mode='binary'   # 2 class classification so its binary
 )
+
+
+model = tf.keras.models.Sequential([
+    tf.keras.layers.Conv2D(32, (3,3), activation='relu', input_shape=(150, 150, 3)),
+    tf.keras.layers.MaxPooling2D(2, 2),
+    tf.keras.layers.Conv2D(64, (3,3), activation='relu'),
+    tf.keras.layers.MaxPooling2D(2,2),
+    tf.keras.layers.Conv2D(128, (3,3), activation='relu'),
+    tf.keras.layers.MaxPooling2D(2,2),
+    tf.keras.layers.Conv2D(128, (3,3), activation='relu'),
+    tf.keras.layers.MaxPooling2D(2,2),
+    tf.keras.layers.Flatten(),
+    tf.keras.layers.Dense(512, activation='relu'),
+    tf.keras.layers.Dense(1, activation='sigmoid')
+])
+
+# compiling, set lost function and optimizer
+model.compile(loss='binary_crossentropy', optimizer=tf.optimizers.Adam(), metrics=['accuracy'])
+
+# train model
+model.fit(
+  train_generator,
+  steps_per_epoch=25,  # how much batch will execute on each epoch
+  epochs=20,
+  validation_data=validation_generator,  # show accuracy on data validation testing
+  validation_steps=5,   # how much batch will execute on each epoch
+  verbose=2
+)
