@@ -2,6 +2,10 @@ import tensorflow as tf
 from tensorflow.keras.optimizers import RMSprop
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import os, zipfile
+import numpy as np
+from keras.preprocessing import image
+import matplotlib.pyplot as plt
+import matplotlib.image as mimg
 
 
 # print(tf.__version__)
@@ -88,3 +92,26 @@ model.fit(
   validation_steps=5,   # how much batch will execute on each epoch
   verbose=2
 )
+
+
+
+# ---- predict image ----
+
+# change filename for different image
+filename = 'bedroom.jpg'
+
+path = filename
+img = image.load_img(path, target_size=(150,150))
+imgplot = plt.imshow(img)
+x = image.img_to_array(img)
+x = np.expand_dims(x, axis=0)
+plt.show()
+
+images = np.vstack([x])
+classes = model.predict(images, batch_size=10)
+
+print(filename)
+if classes == 0:
+  print('Clean')
+else:
+  print('Messy')
